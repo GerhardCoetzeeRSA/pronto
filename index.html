@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pronto — Order Ahead. Collect Hot.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0F1923;--ink2:#162232;--ink3:#253A50;
+  --orange:#F4600C;--orange2:#C44D08;--orange3:#FDEEE6;
+  --amber:#F5A623;--cream:#FEF9F4;
+  --white:#fff;--lgray:#F4F5F6;--gray:#6B7280;
+  --green:#15803D;--teal:#0D7377;
+  --r:14px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden}
+h1,h2,h3,.syne{font-family:'Syne',sans-serif}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(15,25,35,0.97);backdrop-filter:blur(10px)}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 32px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-0.5px}
+.logo span{color:var(--orange)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:rgba(255,255,255,.65);font-size:14px;text-decoration:none;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:var(--orange);color:#fff!important;padding:9px 22px;border-radius:7px;font-weight:600!important}
+.nav-cta:hover{background:var(--orange2)!important}
+
+/* HERO */
+.hero{min-height:100vh;background:var(--ink);display:flex;align-items:center;padding:110px 32px 80px;overflow:hidden;position:relative}
+.hero::before{content:'';position:absolute;width:800px;height:800px;border-radius:50%;background:var(--ink2);top:-260px;right:-200px;pointer-events:none}
+.hero::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;background:var(--ink2);bottom:-100px;left:-80px;pointer-events:none}
+.hero-inner{max-width:1120px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 460px;gap:72px;align-items:center;position:relative;z-index:1}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;background:rgba(244,96,12,.12);border:1px solid rgba(244,96,12,.3);border-radius:20px;padding:7px 16px;margin-bottom:30px}
+.eyebrow-dot{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.eyebrow span{font-size:12px;font-weight:700;color:var(--orange);letter-spacing:1.2px;text-transform:uppercase}
+.hero h1{font-family:'Syne',sans-serif;font-size:72px;font-weight:900;color:#fff;line-height:1.0;letter-spacing:-2px;margin-bottom:26px}
+.hero h1 em{color:var(--amber);font-style:italic}
+.hero-sub{font-size:18px;color:rgba(255,255,255,.55);line-height:1.65;max-width:520px;margin-bottom:42px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{background:var(--orange);color:#fff;padding:15px 30px;border-radius:8px;font-size:16px;font-weight:700;text-decoration:none;transition:all .2s;font-family:'Syne',sans-serif;letter-spacing:-.3px}
+.btn-primary:hover{background:var(--orange2);transform:translateY(-2px)}
+.btn-ghost{color:#fff;padding:15px 30px;border-radius:8px;font-size:16px;font-weight:600;text-decoration:none;border:1.5px solid rgba(255,255,255,.2);transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5)}
+.hero-proof{display:flex;align-items:center;gap:12px;margin-top:28px}
+.hero-proof-avatars{display:flex}
+.hero-proof-avatars div{width:32px;height:32px;border-radius:50%;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:13px;margin-left:-8px;background:var(--ink3)}
+.hero-proof-avatars div:first-child{margin-left:0}
+.hero-proof-text{font-size:13px;color:rgba(255,255,255,.45)}
+.hero-proof-text strong{color:rgba(255,255,255,.75)}
+
+/* PHONE MOCKUP */
+.phone-wrap{position:relative;display:flex;justify-content:center}
+.phone{width:290px;height:600px;background:#080e14;border-radius:46px;border:2.5px solid #253A50;position:relative;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.04)}
+.phone-notch{width:110px;height:30px;background:#080e14;border-radius:0 0 18px 18px;position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:10}
+.phone-screen{position:absolute;inset:0;background:var(--ink);border-radius:43px;overflow:hidden}
+.phone-topbar{background:var(--orange);padding:38px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.phone-logo{font-family:'Syne',sans-serif;font-size:15px;font-weight:900;color:#fff}
+.phone-logo span{font-style:italic}
+.phone-pill{background:rgba(255,255,255,.2);border-radius:10px;padding:4px 9px;font-size:10px;color:#fff;font-weight:600}
+.phone-body{padding:10px 12px}
+.phone-h1{font-family:'Syne',sans-serif;font-size:17px;color:#fff;font-weight:800;margin-bottom:2px}
+.phone-h2{font-size:10px;color:rgba(255,255,255,.55);margin-bottom:12px}
+.phone-cats{display:flex;gap:6px;margin-bottom:11px;overflow:hidden}
+.cat-pill{background:rgba(255,255,255,.1);border-radius:10px;padding:4px 10px;font-size:9px;color:rgba(255,255,255,.7);font-weight:500}
+.cat-pill.on{background:var(--amber);color:var(--ink);font-weight:700}
+.phone-card{background:#fff;border-radius:10px;padding:10px;margin-bottom:7px;display:flex;gap:8px;align-items:center}
+.pc-emoji{font-size:26px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:var(--cream);border-radius:7px}
+.pc-info{flex:1}
+.pc-name{font-size:11px;font-weight:700;color:var(--ink);margin-bottom:1px}
+.pc-desc{font-size:9px;color:var(--gray)}
+.pc-row{display:flex;align-items:center;justify-content:space-between;margin-top:4px}
+.pc-price{font-size:13px;font-weight:700;color:var(--orange)}
+.pc-add{background:var(--orange);color:#fff;border:none;border-radius:7px;padding:4px 9px;font-size:9px;font-weight:700}
+.phone-pay-btn{margin:8px 0 0;background:var(--amber);color:var(--ink);border-radius:10px;padding:11px;text-align:center;font-size:11px;font-weight:800;font-family:'Syne',sans-serif}
+/* floating cards */
+.float-card{position:absolute;background:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 16px 40px rgba(0,0,0,.18);border:1px solid rgba(0,0,0,.06);animation:rise .8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fc-label{font-size:9px;font-weight:700;margin-bottom:4px;text-transform:uppercase;letter-spacing:.8px}
+.fc-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:900;color:var(--ink)}
+.fc-sub{font-size:9px;color:var(--gray);margin-top:1px}
+
+/* STATS BAND */
+.stats-band{background:var(--orange);padding:40px 32px}
+.stats-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
+.stat .val{font-family:'Syne',sans-serif;font-size:48px;font-weight:900;color:#fff}
+.stat .lbl{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px;line-height:1.4}
+
+/* SECTIONS */
+.section{padding:100px 32px}
+.sec-in{max-width:1120px;margin:0 auto}
+.sec-tag{font-size:11px;font-weight:700;color:var(--orange);text-transform:uppercase;letter-spacing:2px;margin-bottom:14px}
+.sec-title{font-family:'Syne',sans-serif;font-size:48px;font-weight:900;line-height:1.05;letter-spacing:-1.5px;margin-bottom:18px}
+.sec-sub{font-size:17px;color:var(--gray);line-height:1.65;max-width:580px;margin-bottom:60px}
+
+/* HOW IT WORKS */
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.how-card{background:#fff;border-radius:16px;padding:32px;border:1px solid #E8EAED;transition:all .25s;position:relative;overflow:hidden}
+.how-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--orange)}
+.how-card:hover{transform:translateY(-5px);box-shadow:0 24px 48px rgba(0,0,0,.08)}
+.how-num{font-family:'Syne',sans-serif;font-size:56px;font-weight:900;color:var(--lgray);line-height:1;margin-bottom:18px}
+.how-icon{font-size:34px;margin-bottom:14px;display:block}
+.how-title{font-size:17px;font-weight:700;margin-bottom:8px;font-family:'Syne',sans-serif}
+.how-desc{font-size:14px;color:var(--gray);line-height:1.65}
+
+/* WHITE LABEL */
+.wl-section{background:var(--ink);padding:100px 32px}
+.wl-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.wl-section .sec-title{color:#fff}
+.wl-section .sec-tag{color:var(--amber)}
+.wl-section .sec-sub{color:rgba(255,255,255,.5);max-width:460px;margin-bottom:40px}
+.brand-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.brand-card{border-radius:12px;padding:20px;text-align:center}
+.brand-card .b-logo{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 10px}
+.brand-card .b-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:#fff;margin-bottom:4px}
+.brand-card .b-tag{font-size:11px;color:rgba(255,255,255,.6)}
+.wl-list{list-style:none;display:flex;flex-direction:column;gap:14px}
+.wl-list li{display:flex;gap:14px;align-items:flex-start}
+.wl-list li .icon{width:40px;height:40px;border-radius:10px;background:rgba(244,96,12,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;margin-top:2px}
+.wl-list li .text strong{display:block;color:#fff;font-size:15px;font-weight:600;margin-bottom:3px}
+.wl-list li .text span{font-size:13px;color:rgba(255,255,255,.45);line-height:1.5}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.feat-card{background:#fff;border-radius:14px;padding:26px;border:1px solid #E8EAED;transition:all .2s}
+.feat-card:hover{border-color:rgba(244,96,12,.25);box-shadow:0 8px 24px rgba(244,96,12,.06)}
+.feat-icon{width:48px;height:48px;border-radius:12px;background:var(--orange3);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:18px}
+.feat-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:7px;font-family:'Syne',sans-serif}
+.feat-desc{font-size:13px;color:var(--gray);line-height:1.6}
+
+/* TARGETS */
+.targets-section{background:var(--ink);padding:100px 32px}
+.targets-section .sec-title{color:#fff}
+.targets-section .sec-tag{color:var(--amber)}
+.targets-section .sec-sub{color:rgba(255,255,255,.45)}
+.chain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.chain-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:24px;transition:all .2s}
+.chain-card:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+.chain-name{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#fff;margin-bottom:4px}
+.chain-meta{font-size:12px;color:rgba(255,255,255,.4);margin-bottom:10px}
+.chain-stars{color:var(--amber);font-size:14px;margin-bottom:6px}
+.chain-branches{font-size:28px;font-weight:900;font-family:'Syne',sans-serif;color:var(--orange)}
+.chain-blabel{font-size:11px;color:rgba(255,255,255,.35)}
+
+/* TESTIMONIALS */
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.test-card{background:#fff;border-radius:14px;padding:26px;border:1px solid #E8EAED}
+.test-stars{color:var(--amber);font-size:15px;margin-bottom:14px}
+.test-q{font-size:15px;color:var(--ink);line-height:1.65;font-style:italic;margin-bottom:18px}
+.test-name{font-size:13px;font-weight:700;color:var(--ink)}
+.test-role{font-size:12px;color:var(--gray)}
+
+/* PRICING */
+.pricing-section{background:var(--white);padding:100px 32px}
+.pricing-in{max-width:1120px;margin:0 auto}
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:54px}
+.price-card{border-radius:16px;padding:38px;border:1.5px solid #E8EAED;position:relative;transition:transform .2s}
+.price-card:hover{transform:translateY(-3px)}
+.price-card.hot{border-color:var(--orange);background:var(--orange3)}
+.hot-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--orange);color:#fff;font-size:11px;font-weight:700;padding:5px 18px;border-radius:20px;white-space:nowrap;letter-spacing:.5px;font-family:'Syne',sans-serif}
+.p-tier{font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px}
+.p-price{font-family:'Syne',sans-serif;font-size:44px;font-weight:900;color:var(--ink);line-height:1;margin-bottom:4px}
+.p-price sub{font-size:18px;color:var(--gray);font-family:'DM Sans',sans-serif;font-weight:400}
+.p-period{font-size:13px;color:var(--gray);margin-bottom:26px}
+.p-feats{list-style:none;margin-bottom:34px}
+.p-feats li{font-size:14px;color:var(--ink);padding:8px 0;border-bottom:1px solid #F0F1F3;display:flex;align-items:center;gap:10px}
+.p-feats li:last-child{border:none}
+.ck{color:var(--green);font-size:15px;font-weight:700}
+.cx{color:#D1D5DB;font-size:15px}
+.btn-p{display:block;text-align:center;padding:14px;border-radius:9px;font-weight:700;font-size:15px;text-decoration:none;transition:all .2s;font-family:'Syne',sans-serif}
+.btn-p-out{border:1.5px solid var(--orange);color:var(--orange)}
+.btn-p-out:hover{background:var(--orange);color:#fff}
+.btn-p-solid{background:var(--orange);color:#fff}
+.btn-p-solid:hover{background:var(--orange2)}
+
+/* CTA */
+.cta-section{background:var(--ink);padding:110px 32px;position:relative;overflow:hidden;text-align:center}
+.cta-section::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(244,96,12,.07);top:-200px;right:-150px;pointer-events:none}
+.cta-section::after{content:'';position:absolute;width:350px;height:350px;border-radius:50%;background:rgba(244,96,12,.06);bottom:-100px;left:-80px;pointer-events:none}
+.cta-in{position:relative;z-index:1;max-width:680px;margin:0 auto}
+.cta-in h2{font-family:'Syne',sans-serif;font-size:54px;font-weight:900;color:#fff;margin-bottom:18px;line-height:1.05;letter-spacing:-1.5px}
+.cta-in h2 em{color:var(--amber);font-style:italic}
+.cta-in p{font-size:18px;color:rgba(255,255,255,.5);margin-bottom:42px;line-height:1.65}
+.cta-form{display:flex;gap:12px;max-width:520px;margin:0 auto}
+.cta-input{flex:1;padding:15px 18px;border-radius:9px;border:1.5px solid rgba(255,255,255,.15);font-size:15px;font-family:'DM Sans',sans-serif;background:rgba(255,255,255,.07);color:#fff}
+.cta-input::placeholder{color:rgba(255,255,255,.35)}
+.cta-input:focus{outline:none;border-color:var(--orange)}
+.cta-btn{background:var(--orange);color:#fff;padding:15px 26px;border-radius:9px;border:none;font-size:15px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap;transition:opacity .2s}
+.cta-btn:hover{opacity:.9}
+.cta-fine{font-size:12px;color:rgba(255,255,255,.3);margin-top:16px}
+.success-msg{display:none;color:var(--amber);font-size:18px;font-weight:700;padding:20px;font-family:'Syne',sans-serif}
+
+/* FOOTER */
+footer{background:#080e14;padding:52px 32px 28px}
+.foot-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+.foot-brand{font-family:'Syne',sans-serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:10px}
+.foot-brand span{color:var(--orange)}
+.foot-sub{font-size:13px;color:rgba(255,255,255,.3);line-height:1.65;max-width:260px}
+.foot-links h4{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:16px}
+.foot-links a{display:block;font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:9px;transition:color .2s}
+.foot-links a:hover{color:#fff}
+.foot-bottom{max-width:1120px;margin:36px auto 0;padding-top:22px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.25)}
+
+@media(max-width:900px){
+  .hero-inner,.how-grid,.feat-grid,.chain-grid,.test-grid,.price-grid,.wl-in,.foot-in{grid-template-columns:1fr}
+  .stats-in{grid-template-columns:repeat(2,1fr)}
+  .hero h1,.sec-title{font-size:40px}
+  .hero-right{display:none}
+  .cta-form{flex-direction:column}
+  .cta-in h2{font-size:36px}
+  .brand-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="logo" href="#">⚡ pronto</a>
+    <div class="nav-links">
+      <a href="#how" class="nav-link-hide">How it works</a>
+      <a href="#brands" class="nav-link-hide">White-label</a>
+      <a href="#pricing" class="nav-link-hide">Pricing</a>
+      <a href="#get-started" class="nav-cta">Book a demo →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="eyebrow"><div class="eyebrow-dot"></div><span>Built for SA quick-service restaurants</span></div>
+      <h1>Order ahead.<br><em>Skip the queue.</em><br>Collect hot.</h1>
+      <p class="hero-sub">Pronto is a fully white-labelled click-and-collect platform for restaurant groups. Your brand. Your menu. Your customers — just with zero friction and every order captured.</p>
+      <div class="cta-row">
+        <a href="#get-started" class="btn-primary">Book a pilot →</a>
+        <a href="#how" class="btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-proof">
+        <div class="hero-proof-avatars">
+          <div>🍕</div><div>🍔</div><div>🍗</div><div>🌶</div>
+        </div>
+        <div class="hero-proof-text">Built for <strong>pizza, burgers, chicken &amp; beyond</strong> — any QSR format</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-topbar">
+              <div class="phone-logo">⚡ <span>pronto</span></div>
+              <div class="phone-pill">🛒 2 items</div>
+            </div>
+            <div class="phone-body">
+              <div class="phone-h1">Order ahead</div>
+              <div class="phone-h2">Pay online · Skip the queue · Collect hot</div>
+              <div class="phone-cats">
+                <div class="cat-pill on">Pizzas</div>
+                <div class="cat-pill">Burgers</div>
+                <div class="cat-pill">Sides</div>
+                <div class="cat-pill">Drinks</div>
+              </div>
+              <div class="phone-card">
+                <div class="pc-emoji">🍕</div>
+                <div class="pc-info">
+                  <div class="pc-name">Margherita</div>
+                  <div class="pc-desc">Tomato, mozzarella, basil</div>
+                  <div class="pc-row"><div class="pc-price">R129</div><button class="pc-add">+ Add</button></div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="pc-emoji">🍔</div>
+                <div class="pc-info">
+                  <div class="pc-name">Flame Burger</div>
+                  <div class="pc-desc">Beef patty, cheddar, pickles</div>
+                  <div class="pc-row"><div class="pc-price">R89</div><button class="pc-add">+ Add</button></div>
+                </div>
+              </div>
+              <div class="phone-pay-btn">Pay & Place Order →</div>
+            </div>
+          </div>
+        </div>
+        <div class="float-card" style="top:108px;right:-44px;width:168px;animation-delay:.6s">
+          <div class="fc-label" style="color:var(--orange)">🔔 Ready to collect!</div>
+          <div style="font-size:11px;color:var(--ink);font-weight:600">Order #847 is hot</div>
+          <div class="fc-sub">Show this at the counter</div>
+        </div>
+        <div class="float-card" style="bottom:164px;left:-48px;width:148px;animation-delay:.9s">
+          <div class="fc-label" style="color:var(--teal)">⏱ Ready in</div>
+          <div class="fc-val">14:22</div>
+          <div class="fc-sub">Kitchen is preparing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="stats-in">
+    <div class="stat"><div class="val">4,200+</div><div class="lbl">QSR branches addressable<br>across SA</div></div>
+    <div class="stat"><div class="val">38%</div><div class="lbl">Queue abandonment<br>on Friday dinner peak</div></div>
+    <div class="stat"><div class="val">2 weeks</div><div class="lbl">From sign-up to<br>first live orders</div></div>
+    <div class="stat"><div class="val">R36M+</div><div class="lbl">Total ARR potential<br>at full SA rollout</div></div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="section" id="how">
+  <div class="sec-in">
+    <div class="sec-tag">How it works</div>
+    <h2 class="sec-title">Six steps.<br>Zero queue.</h2>
+    <p class="sec-sub">Customers browse and pay from home. Your kitchen gets the order instantly. They collect when it's ready — no waiting, no guessing.</p>
+    <div class="how-grid">
+      <div class="how-card"><div class="how-num">01</div><span class="how-icon">📱</span><div class="how-title">Browse the menu</div><div class="how-desc">Full menu on any smartphone browser — no app install. Works on 3G. Fast on any network.</div></div>
+      <div class="how-card"><div class="how-num">02</div><span class="how-icon">💳</span><div class="how-title">Pay online</div><div class="how-desc">Card, Instant EFT, SnapScan or Zapper. Every major South African payment method, built in.</div></div>
+      <div class="how-card"><div class="how-num">03</div><span class="how-icon">🍳</span><div class="how-title">Kitchen gets notified</div><div class="how-desc">Order appears on the kitchen screen instantly. Staff confirm with one tap. Timer starts. Customer is informed.</div></div>
+      <div class="how-card"><div class="how-num">04</div><span class="how-icon">⏱</span><div class="how-title">Live countdown</div><div class="how-desc">Customers see a real-time prep timer. Push alerts fire at every stage — no more calling to ask "is it ready?"</div></div>
+      <div class="how-card"><div class="how-num">05</div><span class="how-icon">🎉</span><div class="how-title">Collect with order code</div><div class="how-desc">Customer shows a bold order number at the till. In and out in seconds — hot food in hand.</div></div>
+      <div class="how-card"><div class="how-num">06</div><span class="how-icon">⭐</span><div class="how-title">Rate, tip, return</div><div class="how-desc">Customers rate their experience and tip the team. You capture satisfaction data and build loyalty — automatically.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHITE LABEL -->
+<section class="wl-section" id="brands">
+  <div class="wl-in">
+    <div>
+      <div class="sec-tag">White-label platform</div>
+      <h2 class="sec-title">Your brand.<br>Our engine.</h2>
+      <p class="sec-sub">Pronto is completely invisible to your customers. They see your logo, your colours, your name — powered entirely by our infrastructure.</p>
+      <ul class="wl-list">
+        <li><div class="icon">🎨</div><div class="text"><strong>Full visual branding</strong><span>Logo, colours, fonts — your identity applied across every screen in the app.</span></div></li>
+        <li><div class="icon">🍽</div><div class="text"><strong>Your menu, your rules</strong><span>Set up items, prices, combos and specials per branch. Update instantly — no developer needed.</span></div></li>
+        <li><div class="icon">🔗</div><div class="text"><strong>Custom domain</strong><span>order.yourbrand.co.za — not our URL. Your digital presence, front and centre.</span></div></li>
+        <li><div class="icon">📲</div><div class="text"><strong>Optional branded app</strong><span>Want a native iOS/Android app under your brand? We handle the build and store listings.</span></div></li>
+      </ul>
+    </div>
+    <div>
+      <div class="brand-grid">
+        <div class="brand-card" style="background:#C44D08"><div class="b-logo">🍔</div><div class="b-name">Steers Go</div><div class="b-tag">Flame-grilled, ordered ahead</div></div>
+        <div class="brand-card" style="background:#7B241C"><div class="b-logo">🍕</div><div class="b-name">Romans Now</div><div class="b-tag">Skip the queue. Stay hungry.</div></div>
+        <div class="brand-card" style="background:#B71C1C"><div class="b-logo">🍗</div><div class="b-name">Licken App</div><div class="b-tag">Hot chicken. Zero wait.</div></div>
+        <div class="brand-card" style="background:var(--teal)"><div class="b-logo">⚡</div><div class="b-name">Your Brand</div><div class="b-tag">Fully customised for you</div></div>
+      </div>
+      <div style="margin-top:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:18px 20px;font-size:13px;color:rgba(255,255,255,.5);line-height:1.6">
+        <strong style="color:rgba(255,255,255,.8);display:block;margin-bottom:6px">⚡ Live in 2 weeks</strong>
+        Branding sign-off on day 1. Menu build on day 3. First test orders by end of week 2. We've done it before — we'll do it again for you.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" style="background:var(--lgray)">
+  <div class="sec-in">
+    <div class="sec-tag">Platform features</div>
+    <h2 class="sec-title">Built for every part<br>of the journey.</h2>
+    <p class="sec-sub">From the first tap to the tip screen — every touchpoint is designed to delight your customer and give you better data.</p>
+    <div class="feat-grid">
+      <div class="feat-card"><div class="feat-icon">🔔</div><div class="feat-title">Live push notifications</div><div class="feat-desc">Kitchen-triggered alerts reach customers at every stage — order received, prep started, ready to collect.</div></div>
+      <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-title">Owner analytics</div><div class="feat-desc">Revenue, order volume, peak hours, popular items and satisfaction scores — per branch or chain-wide.</div></div>
+      <div class="feat-card"><div class="feat-icon">🏪</div><div class="feat-title">Multi-branch management</div><div class="feat-desc">Central menu control with per-location customisation. Add a branch special in seconds.</div></div>
+      <div class="feat-card"><div class="feat-icon">💳</div><div class="feat-title">SA-native payments</div><div class="feat-desc">PayFast, Ozow, SnapScan, Zapper — every method SA customers already trust and use daily.</div></div>
+      <div class="feat-card"><div class="feat-icon">⭐</div><div class="feat-title">Ratings & tipping</div><div class="feat-desc">Structured feedback after every order, with a staff tip channel. Build a culture of recognition.</div></div>
+      <div class="feat-card"><div class="feat-icon">🎁</div><div class="feat-title">Loyalty module</div><div class="feat-desc">Stamp cards, points, birthday promos — all branded, all yours. Turn once-offs into regulars.</div></div>
+      <div class="feat-card"><div class="feat-icon">📶</div><div class="feat-title">3G-optimised</div><div class="feat-desc">Works on low-bandwidth connections. Designed for real South African data conditions, not just fibre.</div></div>
+      <div class="feat-card"><div class="feat-icon">🖨</div><div class="feat-title">Kitchen printer integration</div><div class="feat-desc">Orders print to your existing ticket printers automatically. Zero hardware changes required.</div></div>
+      <div class="feat-card"><div class="feat-icon">🇿🇦</div><div class="feat-title">POPIA compliant</div><div class="feat-desc">Data stays in South Africa. Fully encrypted, POPIA compliant, and secure out of the box.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TARGET CHAINS -->
+<section class="targets-section">
+  <div class="sec-in">
+    <div class="sec-tag">Target market</div>
+    <h2 class="sec-title">Built for every major<br>SA restaurant group.</h2>
+    <p class="sec-sub" style="margin-bottom:52px">Any QSR chain with a walk-in customer base is a Pronto chain waiting to happen.</p>
+    <div class="chain-grid">
+      <div class="chain-card"><div class="chain-name">Romans Pizza</div><div class="chain-meta">Pizza · Family dining</div><div class="chain-stars">★★★★★</div><div class="chain-branches">250+</div><div class="chain-blabel">branches nationwide</div></div>
+      <div class="chain-card"><div class="chain-name">Steers</div><div class="chain-meta">Burgers · Fast food</div><div class="chain-stars">★★★★★</div><div class="chain-branches">600+</div><div class="chain-blabel">branches nationwide</div></div>
+      <div class="chain-card"><div class="chain-name">Chicken Licken</div><div class="chain-meta">Fried chicken</div><div class="chain-stars">★★★★★</div><div class="chain-branches">280+</div><div class="chain-blabel">branches nationwide</div></div>
+      <div class="chain-card"><div class="chain-name">Debonairs Pizza</div><div class="chain-meta">Pizza · Delivery-heavy</div><div class="chain-stars">★★★★☆</div><div class="chain-branches">250+</div><div class="chain-blabel">branches nationwide</div></div>
+      <div class="chain-card"><div class="chain-name">Nando's</div><div class="chain-meta">Flame-grilled chicken</div><div class="chain-stars">★★★★☆</div><div class="chain-branches">200+</div><div class="chain-blabel">branches nationwide</div></div>
+      <div class="chain-card"><div class="chain-name">Fishaways</div><div class="chain-meta">Fish &amp; chips</div><div class="chain-stars">★★★★☆</div><div class="chain-branches">280+</div><div class="chain-blabel">branches nationwide</div></div>
+    </div>
+    <div style="margin-top:32px;text-align:center;font-size:14px;color:rgba(255,255,255,.3)">Total addressable: <strong style="color:var(--orange)">1,860+ branches</strong> across these 6 chains alone · SA QSR market: <strong style="color:var(--orange)">R8.6B</strong></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section" style="background:var(--cream)">
+  <div class="sec-in">
+    <div class="sec-tag">Early feedback</div>
+    <h2 class="sec-title">What operators are saying.</h2>
+    <p class="sec-sub" style="margin-bottom:44px">From pilot conversations with branch managers and franchise owners across South Africa.</p>
+    <div class="test-grid">
+      <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-q">"Friday evenings we lose 30+ customers just from queue frustration. If this cuts even half of that, it pays for itself in a week."</p><div class="test-name">Branch Manager</div><div class="test-role">Johannesburg North</div></div>
+      <div class="test-card"><div class="test-stars">★★★★★</div><p class="test-q">"The kitchen notification system is the thing I'm most excited about. Right now it's manual calls — it's chaos at peak time."</p><div class="test-name">Operations Supervisor</div><div class="test-role">Pretoria East</div></div>
+      <div class="test-card"><div class="test-stars">★★★★☆</div><p class="test-q">"The data side is underrated. We genuinely don't know what our busiest items are by time of day. This changes how we staff up."</p><div class="test-name">Franchise Owner</div><div class="test-role">Durban North</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-in">
+    <div class="sec-tag">Transparent pricing</div>
+    <h2 class="sec-title">Simple. Fair. Per branch.</h2>
+    <p class="sec-sub">No setup fees for pilots. No lock-in. We succeed when you succeed.</p>
+    <div class="price-grid">
+      <div class="price-card">
+        <div class="p-tier">Starter</div>
+        <div class="p-price">R850 <sub>/ mo</sub></div>
+        <div class="p-period">per branch · billed monthly</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span> Full ordering platform</li>
+          <li><span class="ck">✓</span> Push notifications</li>
+          <li><span class="ck">✓</span> Live timer & tracking</li>
+          <li><span class="ck">✓</span> Rating + tipping</li>
+          <li><span class="ck">✓</span> Basic analytics</li>
+          <li><span class="cx">✗</span> Multi-branch dashboard</li>
+          <li><span class="cx">✗</span> Loyalty module</li>
+        </ul>
+        <a href="#get-started" class="btn-p btn-p-out">Get started</a>
+      </div>
+      <div class="price-card hot">
+        <div class="hot-badge">Most popular</div>
+        <div class="p-tier">Growth</div>
+        <div class="p-price">R2,100 <sub>/ mo</sub></div>
+        <div class="p-period">per branch · billed monthly</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span> Everything in Starter</li>
+          <li><span class="ck">✓</span> Advanced analytics</li>
+          <li><span class="ck">✓</span> Multi-branch control</li>
+          <li><span class="ck">✓</span> Loyalty stamp cards</li>
+          <li><span class="ck">✓</span> Kitchen printer integration</li>
+          <li><span class="ck">✓</span> Dedicated onboarding</li>
+          <li><span class="cx">✗</span> Custom loyalty campaigns</li>
+        </ul>
+        <a href="#get-started" class="btn-p btn-p-solid">Start 12-week pilot</a>
+      </div>
+      <div class="price-card">
+        <div class="p-tier">Enterprise</div>
+        <div class="p-price" style="font-size:32px;padding-top:6px">Custom</div>
+        <div class="p-period">group-wide pricing · volume discounts</div>
+        <ul class="p-feats">
+          <li><span class="ck">✓</span> Everything in Growth</li>
+          <li><span class="ck">✓</span> Custom loyalty campaigns</li>
+          <li><span class="ck">✓</span> Full white-label &amp; custom domain</li>
+          <li><span class="ck">✓</span> POS &amp; API integration</li>
+          <li><span class="ck">✓</span> Dedicated account manager</li>
+          <li><span class="ck">✓</span> SLA &amp; uptime guarantee</li>
+          <li><span class="ck">✓</span> Native branded app (iOS &amp; Android)</li>
+        </ul>
+        <a href="#get-started" class="btn-p btn-p-out">Talk to us</a>
+      </div>
+    </div>
+    <p style="margin-top:30px;font-size:13px;color:var(--gray);text-align:center">All plans include 1.5% transaction commission. No setup fees for the pilot programme. Cancel any time.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="get-started">
+  <div class="cta-in">
+    <h2>Ready to go<br><em>pronto?</em></h2>
+    <p>We set up your first branch in 2 weeks and run a 12-week paid pilot. Proven ROI — or your money back.</p>
+    <div id="form-wrap">
+      <div class="cta-form">
+        <input class="cta-input" type="email" placeholder="Your work email" id="email-in">
+        <button class="cta-btn" onclick="handleCta()">Book a demo →</button>
+      </div>
+      <p class="cta-fine">No commitment. We'll reach out within 24 hours to schedule a call.</p>
+    </div>
+    <div class="success-msg" id="success-msg">⚡ You're on the list! We'll be in touch within 24 hours.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-in">
+    <div>
+      <div class="foot-brand">⚡ pronto</div>
+      <p class="foot-sub">A white-label click-and-collect platform for quick-service restaurant groups. South African. Built to scale.</p>
+    </div>
+    <div class="foot-links">
+      <h4>Platform</h4>
+      <a href="#how">How it works</a>
+      <a href="#brands">White-label</a>
+      <a href="#pricing">Pricing</a>
+    </div>
+    <div class="foot-links">
+      <h4>Company</h4>
+      <a href="#">About</a>
+      <a href="#">Case studies</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="foot-links">
+      <h4>Contact</h4>
+      <a href="mailto:hello@getpronto.co.za">hello@getpronto.co.za</a>
+      <a href="#">+27 11 000 0000</a>
+      <a href="#">Johannesburg, SA</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2025 Pronto. All rights reserved.</span>
+    <span>Privacy Policy · Terms of Service</span>
+  </div>
+</footer>
+
+<script>
+function handleCta(){
+  const v=document.getElementById('email-in').value;
+  if(!v||!v.includes('@')){document.getElementById('email-in').style.borderColor='var(--orange)';return}
+  document.getElementById('form-wrap').style.display='none';
+  document.getElementById('success-msg').style.display='block';
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+});
+</script>
+</body>
+</html>
