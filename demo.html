@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Pronto — Live Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#0F1923;--ink2:#162232;--ink3:#253A50;
+  --ora:#F4600C;--ora2:#C44D08;--ora3:#FDEEE6;
+  --amb:#F5A623;--amb2:#D4860A;
+  --cream:#FEF9F4;--white:#fff;
+  --gray:#6B7280;--border:#E5E7EB;--lgray:#F4F5F6;
+  --green:#16A34A;--green-l:#DCFCE7;--green-b:#86EFAC;
+  --r:14px;
+}
+html,body{height:100%;overflow:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);max-width:430px;margin:0 auto;position:relative}
+
+/* ── DEMO BANNER ─────────────────────────────────────────────────────────── */
+.demo-bar{background:var(--ink);color:rgba(255,255,255,.7);font-size:12px;text-align:center;padding:7px 16px;display:flex;align-items:center;justify-content:center;gap:12px;flex-shrink:0}
+.demo-bar strong{color:var(--amb)}
+.demo-bar a{color:rgba(255,255,255,.5);font-size:11px;text-decoration:none;border:1px solid rgba(255,255,255,.2);border-radius:4px;padding:2px 8px;transition:all .2s}
+.demo-bar a:hover{color:#fff;border-color:rgba(255,255,255,.5)}
+
+/* ── SCREENS ─────────────────────────────────────────────────────────────── */
+#app{height:calc(100vh - 36px);display:flex;flex-direction:column;overflow:hidden}
+.screen{display:none;flex-direction:column;flex:1;overflow:hidden}
+.screen.active{display:flex}
+
+/* ── TOP BAR ─────────────────────────────────────────────────────────────── */
+.topbar{background:var(--ink);color:#fff;padding:13px 18px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50}
+.brand{font-family:'Syne',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:6px}
+.brand-bolt{color:var(--ora);font-style:normal}
+.brand em{color:var(--ora);font-style:italic}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.topbar-sub{font-size:12px;opacity:.55;font-weight:500}
+.cart-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;padding:6px 13px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:background .2s}
+.cart-btn:hover{background:rgba(255,255,255,.18)}
+.cart-badge{background:var(--ora);color:#fff;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:700;min-width:20px;text-align:center}
+
+/* ── SCROLLABLE BODY ─────────────────────────────────────────────────────── */
+.scroll-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.scroll-body.pb{padding-bottom:90px}
+
+/* ── CATEGORY TABS ───────────────────────────────────────────────────────── */
+.cats-wrap{background:#fff;border-bottom:1px solid var(--border);flex-shrink:0}
+.cats{display:flex;gap:8px;padding:12px 18px;overflow-x:auto;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat-tab{background:var(--lgray);border:1.5px solid transparent;border-radius:20px;padding:7px 16px;cursor:pointer;font-size:13px;font-weight:600;white-space:nowrap;transition:all .18s;font-family:'DM Sans',sans-serif}
+.cat-tab.active{background:var(--ora);color:#fff;border-color:var(--ora)}
+.cat-tab:hover:not(.active){background:var(--border)}
+
+/* ── MENU HERO STRIP ─────────────────────────────────────────────────────── */
+.menu-hero{background:var(--ink);padding:16px 18px 14px}
+.menu-hero-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:-.4px;margin-bottom:2px}
+.menu-hero-sub{font-size:12px;color:rgba(255,255,255,.45)}
+
+/* ── MENU ITEMS ──────────────────────────────────────────────────────────── */
+.menu-list{padding:14px 18px;display:flex;flex-direction:column;gap:10px}
+.menu-item{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:13px;display:flex;gap:12px;align-items:flex-start;transition:box-shadow .2s}
+.menu-item:hover{box-shadow:0 3px 14px rgba(0,0,0,.07)}
+.item-emoji{font-size:36px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:var(--cream);border-radius:10px;flex-shrink:0}
+.item-info{flex:1;min-width:0}
+.item-name{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:2px;letter-spacing:-.3px}
+.item-desc{font-size:12px;color:var(--gray);line-height:1.4;margin-bottom:8px}
+.item-footer{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.item-price{font-size:16px;font-weight:700;color:var(--ora);flex-shrink:0}
+.add-btn{background:var(--ora);color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;transition:background .18s;white-space:nowrap}
+.add-btn:hover{background:var(--ora2)}
+.qty-ctrl{display:flex;align-items:center;gap:8px}
+.qty-btn{width:28px;height:28px;border-radius:50%;border:2px solid var(--ora);background:#fff;color:var(--ora);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1;font-weight:700}
+.qty-btn.plus{background:var(--ora);color:#fff;border-color:var(--ora)}
+.qty-btn:hover{opacity:.8}
+.qty-num{font-weight:700;font-size:15px;min-width:22px;text-align:center;color:var(--ink)}
+
+/* ── CART ────────────────────────────────────────────────────────────────── */
+.cart-header{padding:14px 18px 0}
+.back-btn{background:none;border:none;color:var(--ora);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:4px;margin-bottom:10px;font-family:'DM Sans',sans-serif;padding:0}
+.cart-section-title{font-family:'Syne',sans-serif;font-size:19px;font-weight:900;letter-spacing:-.4px;margin-bottom:2px}
+.cart-section-sub{font-size:12px;color:var(--gray);margin-bottom:14px}
+.cart-items-list{padding:0 18px;display:flex;flex-direction:column;gap:9px}
+.cart-item{background:#fff;border-radius:12px;border:1px solid var(--border);padding:12px 13px;display:flex;align-items:center;gap:10px}
+.ci-emoji{font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:var(--cream);border-radius:8px;flex-shrink:0}
+.ci-info{flex:1;min-width:0}
+.ci-name{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci-price{font-size:12px;color:var(--gray);margin-top:1px}
+.ci-total{font-weight:700;font-size:14px;min-width:48px;text-align:right;color:var(--ink)}
+.note-wrap{padding:14px 18px 0}
+.note-label{font-size:12px;color:var(--gray);font-weight:600;margin-bottom:6px}
+.order-note{width:100%;border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;resize:none;color:var(--ink);background:#fff;transition:border .2s}
+.order-note:focus{outline:none;border-color:var(--ora)}
+
+/* ── STICKY FOOTER ───────────────────────────────────────────────────────── */
+.sticky-foot{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--border);padding:14px 18px;z-index:40;flex-shrink:0}
+.summary-row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:5px;color:var(--gray)}
+.summary-total{display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin:8px 0 13px;color:var(--ink)}
+.primary-btn{width:100%;background:var(--ora);color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .18s;letter-spacing:-.3px}
+.primary-btn:hover{background:var(--ora2)}
+.primary-btn:disabled{opacity:.38;cursor:default}
+.primary-btn:active{transform:scale(.98)}
+
+/* ── PAYMENT ─────────────────────────────────────────────────────────────── */
+.pay-body{padding:14px 18px;display:flex;flex-direction:column;gap:0}
+.sec-label{font-size:11px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.9px;margin:16px 0 8px}
+.pickup-banner{background:#FFF8EE;border:1px solid #FCD34D;border-radius:12px;padding:13px 15px;display:flex;gap:10px;align-items:flex-start}
+.pickup-banner-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.pickup-banner-text{font-size:13px;color:#92400E;line-height:1.55}
+.pickup-banner-text strong{display:block;font-size:14px;margin-bottom:2px;color:#78350F}
+.pay-method{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:8px;transition:all .18s}
+.pay-method.selected{border-color:var(--ora);background:var(--ora3)}
+.pm-icon{font-size:22px;width:36px;text-align:center;flex-shrink:0}
+.pm-label{font-weight:700;font-size:14px;color:var(--ink)}
+.pm-sub{font-size:12px;color:var(--gray)}
+.radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);margin-left:auto;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.pay-method.selected .radio{border-color:var(--ora);background:var(--ora)}
+.radio-dot{width:8px;height:8px;border-radius:50%;background:#fff}
+.card-fields{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:2px;display:flex;flex-direction:column;gap:0}
+.f-label{font-size:12px;color:var(--gray);margin-bottom:4px;font-weight:500}
+.f-input{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);margin-bottom:10px;transition:border .2s;background:#fff}
+.f-input:focus{outline:none;border-color:var(--ora)}
+.f-row{display:flex;gap:10px}
+.f-row .f-col{flex:1}
+
+/* ── ORDER CONFIRMED ─────────────────────────────────────────────────────── */
+.confirm-body{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:30px 20px;overflow-y:auto}
+.confetti{font-size:64px;margin-bottom:6px;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0.5)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+.confirm-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:900;letter-spacing:-.6px;margin-bottom:6px}
+.confirm-sub{font-size:14px;color:var(--gray);line-height:1.6;max-width:280px}
+.order-badge{background:var(--ink);border-radius:18px;padding:22px 40px;margin:22px 0;width:100%;max-width:300px}
+.order-badge-label{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px}
+.order-badge-num{font-family:'Syne',sans-serif;font-size:54px;font-weight:900;letter-spacing:4px;color:var(--amb);line-height:1}
+.confirm-tip{background:var(--green-l);border:1px solid var(--green-b);border-radius:12px;padding:13px 15px;margin-top:4px;font-size:13px;color:#166534;line-height:1.55;text-align:left;width:100%;max-width:360px}
+.confirm-tip strong{display:block;font-size:14px;margin-bottom:3px;color:#14532D}
+
+/* ── TRACKING ────────────────────────────────────────────────────────────── */
+.track-body{padding:16px 18px;display:flex;flex-direction:column;gap:0}
+.order-ref{font-size:13px;color:var(--gray);margin-bottom:16px}
+.order-ref strong{color:var(--ink);font-weight:700}
+
+.timer-card{border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;transition:background .6s}
+.timer-card.waiting{background:var(--ink2)}
+.timer-card.cooking{background:var(--ora2)}
+.timer-card.ready{background:var(--green)}
+.timer-label{font-size:12px;opacity:.65;margin-bottom:6px;color:#fff;text-transform:uppercase;letter-spacing:.8px}
+.timer-value{font-family:'Syne',sans-serif;font-size:52px;font-weight:900;letter-spacing:3px;line-height:1;color:var(--amb);transition:color .6s}
+.timer-card.cooking .timer-value{color:#FFD8B8}
+.timer-card.ready .timer-value{color:#fff;font-size:32px;letter-spacing:1px}
+.timer-sub{font-size:12px;opacity:.6;margin-top:6px;color:#fff}
+
+.notif-stack{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.notif{background:var(--green-l);border:1px solid var(--green-b);border-radius:10px;padding:10px 13px;display:flex;gap:10px;align-items:center;animation:slideIn .35s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.notif-icon{font-size:18px;flex-shrink:0}
+.notif-text{font-size:13px;color:#166534;font-weight:600}
+.notif-time{font-size:11px;color:#4ADE80;margin-left:auto;flex-shrink:0}
+
+.steps-list{display:flex;flex-direction:column;gap:0}
+.step-row{display:flex;gap:14px;align-items:flex-start;position:relative}
+.step-row:not(:last-child)::before{content:'';position:absolute;left:17px;top:38px;width:2px;bottom:-8px;background:var(--border);transition:background .5s}
+.step-row.done::before,.step-row.active::before{background:var(--green)}
+.step-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;border:2px solid var(--border);background:#fff;z-index:1;transition:all .4s}
+.step-dot.done{background:var(--green);border-color:var(--green);color:#fff}
+.step-dot.active{background:var(--ora);border-color:var(--ora);color:#fff;animation:throb 1.4s infinite}
+@keyframes throb{0%,100%{box-shadow:0 0 0 0 rgba(244,96,12,.35)}50%{box-shadow:0 0 0 8px rgba(244,96,12,0)}}
+.step-dot.pending{color:#D1D5DB}
+.step-info{padding:6px 0 24px;flex:1}
+.step-title{font-weight:700;font-size:14px;transition:color .3s}
+.step-title.done,.step-title.active{color:var(--ink)}
+.step-title.pending{color:var(--gray)}
+.step-time{font-size:11px;color:var(--gray);margin-top:2px}
+.step-detail{font-size:12px;color:var(--gray);margin-top:3px;line-height:1.5}
+
+/* ── RATING ──────────────────────────────────────────────────────────────── */
+.rate-body{padding:18px 18px;display:flex;flex-direction:column;gap:0}
+.rate-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;margin-bottom:3px}
+.rate-sub{font-size:13px;color:var(--gray);margin-bottom:0}
+.stars-row{display:flex;gap:10px;justify-content:center;margin:20px 0 4px}
+.star{font-size:42px;cursor:pointer;transition:transform .15s,filter .15s;filter:grayscale(1) opacity(.35);user-select:none}
+.star.on{filter:grayscale(0) opacity(1);color:var(--amb)}
+.star:hover{transform:scale(1.2)}
+.stars-label{text-align:center;font-size:13px;color:var(--gray);min-height:20px;margin-bottom:16px;font-weight:500}
+
+.tag-section-label{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--ink)}
+.tags-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:18px}
+.tag{border:1.5px solid var(--border);border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;transition:all .18s;background:#fff;font-family:'DM Sans',sans-serif;color:var(--gray)}
+.tag.on{border-color:var(--ora);background:var(--ora3);color:var(--ora2);font-weight:600}
+.comment-label{font-size:13px;font-weight:700;margin-bottom:7px;color:var(--ink)}
+.feedback-area{width:100%;border:1.5px solid var(--border);border-radius:12px;padding:12px;font-family:'DM Sans',sans-serif;font-size:14px;resize:none;color:var(--ink);transition:border .2s;background:#fff}
+.feedback-area:focus{outline:none;border-color:var(--ora)}
+
+.tip-card{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 16px 14px;margin-top:18px}
+.tip-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;letter-spacing:-.3px;margin-bottom:3px}
+.tip-card-sub{font-size:12px;color:var(--gray);margin-bottom:12px}
+.tip-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:8px}
+.tip-btn{border:1.5px solid var(--border);border-radius:10px;padding:10px 6px;text-align:center;cursor:pointer;font-weight:700;font-size:14px;background:#fff;transition:all .18s;font-family:'DM Sans',sans-serif;color:var(--ink)}
+.tip-btn.on{border-color:var(--ora);background:var(--ora3);color:var(--ora2)}
+.tip-custom{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);margin-top:0;transition:border .2s;background:#fff}
+.tip-custom:focus{outline:none;border-color:var(--ora)}
+
+/* ── DONE ────────────────────────────────────────────────────────────────── */
+.done-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px 24px}
+.done-icon{font-size:80px;margin-bottom:14px;animation:pop .5s ease}
+.done-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:900;letter-spacing:-.7px;margin-bottom:8px}
+.done-sub{font-size:15px;color:var(--gray);line-height:1.65;max-width:270px;margin-bottom:32px}
+.done-bolt{font-size:14px;color:var(--gray);margin-top:20px}
+.done-bolt a{color:var(--ora);text-decoration:none;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- Demo Banner -->
+<div class="demo-bar">
+  <strong>⚡ Pronto</strong> — Interactive demo &nbsp;·&nbsp; No real orders are placed
+  <a href="index.html">← Back to website</a>
+</div>
+
+<div id="app">
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: MENU -->
+<div class="screen active" id="s-menu">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <button class="cart-btn" onclick="goCart()" aria-label="View cart">
+      🛒 Cart <span class="cart-badge" id="cart-count">0</span>
+    </button>
+  </div>
+  <div class="menu-hero">
+    <div class="menu-hero-title">Order ahead, skip the queue</div>
+    <div class="menu-hero-sub">Pay online · Collect when ready · Zero waiting</div>
+  </div>
+  <div class="cats-wrap">
+    <div class="cats" id="cats-row"></div>
+  </div>
+  <div class="scroll-body pb">
+    <div class="menu-list" id="menu-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: CART -->
+<div class="screen" id="s-cart">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <span class="topbar-sub">Your order</span>
+  </div>
+  <div class="scroll-body pb">
+    <div class="cart-header">
+      <button class="back-btn" onclick="show('menu')">← Back to menu</button>
+      <div class="cart-section-title">Your Cart</div>
+      <div class="cart-section-sub" id="cart-item-count">0 items</div>
+    </div>
+    <div class="cart-items-list" id="cart-list"></div>
+    <div class="note-wrap">
+      <div class="note-label">Special instructions (optional)</div>
+      <textarea class="order-note" id="order-note" rows="2" placeholder="Allergies, extra sauce, no onions…"></textarea>
+    </div>
+  </div>
+  <div class="sticky-foot">
+    <div class="summary-row"><span>Subtotal</span><span id="cart-subtotal">R0</span></div>
+    <div class="summary-row"><span>Service fee</span><span>R5</span></div>
+    <div class="summary-total"><span>Total</span><span id="cart-total">R0</span></div>
+    <button class="primary-btn" onclick="show('pay')">Proceed to Payment →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: PAYMENT -->
+<div class="screen" id="s-pay">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <span class="topbar-sub">Payment</span>
+  </div>
+  <div class="scroll-body pb">
+    <div class="pay-body">
+      <button class="back-btn" onclick="show('cart')">← Back to cart</button>
+      <div class="pickup-banner">
+        <div class="pickup-banner-icon">📍</div>
+        <div class="pickup-banner-text">
+          <strong>Click &amp; Collect</strong>
+          Order online, pay now. Show your order number at the counter — skip the queue and collect your food hot.
+        </div>
+      </div>
+      <div class="sec-label">Payment method</div>
+      <div class="pay-method selected" id="pm-card" onclick="selectPay('card')">
+        <div class="pm-icon">💳</div>
+        <div><div class="pm-label">Credit / Debit Card</div><div class="pm-sub">Visa, Mastercard, Amex</div></div>
+        <div class="radio" id="r-card"><div class="radio-dot"></div></div>
+      </div>
+      <div class="pay-method" id="pm-eft" onclick="selectPay('eft')">
+        <div class="pm-icon">🏦</div>
+        <div><div class="pm-label">Instant EFT</div><div class="pm-sub">Via your banking app</div></div>
+        <div class="radio" id="r-eft"></div>
+      </div>
+      <div class="pay-method" id="pm-snap" onclick="selectPay('snap')">
+        <div class="pm-icon">📷</div>
+        <div><div class="pm-label">SnapScan / Zapper</div><div class="pm-sub">Scan &amp; pay instantly</div></div>
+        <div class="radio" id="r-snap"></div>
+      </div>
+      <div id="card-fields" class="card-fields">
+        <div class="f-label">Card number</div>
+        <input class="f-input" placeholder="4242 4242 4242 4242" maxlength="19" inputmode="numeric">
+        <div class="f-row">
+          <div class="f-col"><div class="f-label">Expiry</div><input class="f-input" placeholder="MM/YY" maxlength="5"></div>
+          <div class="f-col"><div class="f-label">CVV</div><input class="f-input" placeholder="123" maxlength="4" inputmode="numeric"></div>
+        </div>
+        <div class="f-label">Name on card</div>
+        <input class="f-input" placeholder="John Smith" style="margin-bottom:0">
+      </div>
+    </div>
+  </div>
+  <div class="sticky-foot">
+    <div class="summary-total" style="font-size:16px;margin-bottom:12px"><span>Pay now</span><span id="pay-total">R0</span></div>
+    <button class="primary-btn" onclick="placeOrder()">🔒 Pay &amp; Place Order</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: CONFIRMED -->
+<div class="screen" id="s-confirm">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <span class="topbar-sub">Order confirmed</span>
+  </div>
+  <div class="scroll-body">
+    <div class="confirm-body">
+      <div class="confetti">🎉</div>
+      <div class="confirm-title">Order Confirmed!</div>
+      <div class="confirm-sub">Payment successful. Show the number below at the counter — your food will be waiting, hot and fresh.</div>
+      <div class="order-badge">
+        <div class="order-badge-label">Your order number</div>
+        <div class="order-badge-num" id="order-num">—</div>
+      </div>
+      <div class="confirm-tip">
+        <strong>🔔 You'll get live updates</strong>
+        We'll notify you the moment the kitchen starts preparing — and again the second your order is ready to collect. No more wondering.
+      </div>
+      <button class="primary-btn" style="margin-top:22px;max-width:320px" onclick="show('track');startTracking()">Track my order →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: TRACKING -->
+<div class="screen" id="s-track">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <span class="topbar-sub">Live tracking</span>
+  </div>
+  <div class="scroll-body pb">
+    <div class="track-body">
+      <div class="order-ref">Order <strong id="track-ref">—</strong></div>
+      <div class="timer-card waiting" id="timer-card">
+        <div class="timer-label" id="timer-label">Estimated time remaining</div>
+        <div class="timer-value" id="timer-val">—:—</div>
+        <div class="timer-sub" id="timer-sub">Waiting for kitchen…</div>
+      </div>
+      <div class="notif-stack" id="notif-stack"></div>
+      <div class="steps-list" id="steps-list"></div>
+    </div>
+  </div>
+  <div class="sticky-foot">
+    <button class="primary-btn" id="rate-btn" onclick="show('rate')" disabled>Leave feedback</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: RATING -->
+<div class="screen" id="s-rate">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+    <span class="topbar-sub">Feedback</span>
+  </div>
+  <div class="scroll-body pb">
+    <div class="rate-body">
+      <div class="rate-title">How was your order?</div>
+      <div class="rate-sub">Your feedback helps us improve</div>
+      <div class="stars-row" id="stars-row" role="group" aria-label="Star rating"></div>
+      <div class="stars-label" id="stars-label">Tap a star to rate</div>
+      <div id="rate-extra" style="display:none">
+        <div class="tag-section-label">What stood out?</div>
+        <div class="tags-row" id="tags-row"></div>
+        <div class="comment-label">Anything else to share?</div>
+        <textarea class="feedback-area" rows="3" placeholder="Tell us what you loved or what we can improve…" id="comment-box"></textarea>
+        <div class="tip-card">
+          <div class="tip-card-title">Add a tip? 🙏</div>
+          <div class="tip-card-sub">100% goes directly to the kitchen &amp; counter team</div>
+          <div class="tip-grid" id="tip-grid"></div>
+          <input class="tip-custom" type="number" min="0" placeholder="Or enter a custom amount (R)" id="tip-input" oninput="selTip=null;renderTips()">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sticky-foot">
+    <button class="primary-btn" id="submit-btn" disabled onclick="submitFeedback()">Submit feedback</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ SCREEN: DONE -->
+<div class="screen" id="s-done">
+  <div class="topbar">
+    <div class="brand"><span class="brand-bolt">⚡</span> <em>pronto</em></div>
+  </div>
+  <div class="scroll-body">
+    <div class="done-body">
+      <div class="done-icon">🏆</div>
+      <div class="done-title">Thank you!</div>
+      <div class="done-sub">Your feedback has been submitted. We'll keep getting better — see you next time!</div>
+      <button class="primary-btn" style="max-width:300px" onclick="resetApp()">Start a new order</button>
+      <div class="done-bolt">Powered by <a href="index.html">⚡ pronto</a></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- #app -->
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const MENU = {
+  "Pizzas":[
+    {id:1,name:"Margherita",desc:"Tomato base, mozzarella, fresh basil",price:129,emoji:"🍕"},
+    {id:2,name:"BBQ Chicken",desc:"Smoky BBQ sauce, grilled chicken, peppers",price:155,emoji:"🍗"},
+    {id:3,name:"Meat Lovers",desc:"Pepperoni, salami, bacon, ground beef",price:169,emoji:"🥩"},
+    {id:4,name:"Veggie Supreme",desc:"Mushrooms, olives, onion, peppers, feta",price:145,emoji:"🥦"},
+  ],
+  "Burgers":[
+    {id:5,name:"Classic Smash",desc:"Double smash patty, cheese, pickles, special sauce",price:99,emoji:"🍔"},
+    {id:6,name:"Spicy Ranch",desc:"Crispy chicken, ranch, jalapeños, slaw",price:109,emoji:"🌶"},
+    {id:7,name:"Mushroom Swiss",desc:"Beef patty, Swiss cheese, sautéed mushrooms",price:119,emoji:"🍄"},
+  ],
+  "Sides":[
+    {id:8,name:"Loaded Fries",desc:"Crispy fries, cheese sauce, streaky bacon",price:59,emoji:"🍟"},
+    {id:9,name:"Garlic Bread",desc:"Toasted ciabatta with herb &amp; garlic butter",price:45,emoji:"🥖"},
+    {id:10,name:"Caesar Salad",desc:"Cos lettuce, croutons, parmesan, classic dressing",price:65,emoji:"🥗"},
+    {id:11,name:"Onion Rings",desc:"Beer-battered, crispy, served with dipping sauce",price:49,emoji:"🧅"},
+  ],
+  "Drinks":[
+    {id:12,name:"Coca-Cola 500ml",desc:"Ice cold, classic",price:28,emoji:"🥤"},
+    {id:13,name:"Still Water 500ml",desc:"Crisp filtered still water",price:18,emoji:"💧"},
+    {id:14,name:"Passion Fruit Juice",desc:"100% juice, no added sugar",price:35,emoji:"🍹"},
+    {id:15,name:"Chocolate Milkshake",desc:"Thick &amp; creamy, house-made",price:45,emoji:"🍫"},
+  ]
+};
+const CATS = Object.keys(MENU);
+const STAR_LABELS = ["","Terrible 😟","Poor 😕","OK 🙂","Good 😊","Amazing 🤩"];
+const TAGS = ["🔥 Piping hot","⚡ Super fast","😍 Delicious","📦 Well packed","💯 Exact order","👑 Great value","🧑‍🍳 Great kitchen","🙌 Easy to use"];
+const TIPS = [15,25,50,100];
+const STEPS = [
+  {key:"received",label:"Order received",detail:"Your order is in the queue",icon:"📋"},
+  {key:"started",label:"Preparation started",detail:"The kitchen is making your food!",icon:"👨‍🍳"},
+  {key:"almost",label:"Almost ready",detail:"Final touches being added",icon:"⏳"},
+  {key:"ready",label:"Ready to collect!",detail:"Hot and waiting at the counter 🎉",icon:"✅"},
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let activeCat = CATS[0];
+let cart = {};          // {id: qty}
+let orderNum = "";
+let rating = 0;
+let selTip = null;
+let trackStep = 0;
+let timerSecs = 0;
+let timerInt = null;
+let stepTimes = {};
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const show = name => {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $('s-'+name).classList.add('active');
+  window.scrollTo(0,0);
+};
+const rnd = () => "#" + Math.floor(100+Math.random()*900) + Math.floor(10+Math.random()*90);
+const fmt = n => "R" + Math.round(n);
+const allItems = () => CATS.flatMap(c => MENU[c]);
+const findItem = id => allItems().find(i => i.id === id);
+const now = () => new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+
+// ── MENU ─────────────────────────────────────────────────────────────────────
+function buildCats() {
+  const row = $('cats-row');
+  row.innerHTML = '';
+  CATS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cat-tab' + (c === activeCat ? ' active' : '');
+    b.textContent = c;
+    b.onclick = () => { activeCat = c; buildCats(); buildMenu(); };
+    row.appendChild(b);
+  });
+}
+
+function buildMenu() {
+  const list = $('menu-list');
+  list.innerHTML = '';
+  MENU[activeCat].forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'menu-item';
+    div.innerHTML = `
+      <div class="item-emoji">${item.emoji}</div>
+      <div class="item-info">
+        <div class="item-name">${item.name}</div>
+        <div class="item-desc">${item.desc}</div>
+        <div class="item-footer">
+          <div class="item-price">${fmt(item.price)}</div>
+          <div id="ctrl-${item.id}"></div>
+        </div>
+      </div>`;
+    list.appendChild(div);
+    renderCtrl(item.id);
+  });
+}
+
+function renderCtrl(id) {
+  const el = $('ctrl-'+id);
+  if (!el) return;
+  const qty = cart[id] || 0;
+  if (qty === 0) {
+    el.innerHTML = `<button class="add-btn" onclick="addItem(${id})">+ Add</button>`;
+  } else {
+    el.innerHTML = `
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="removeItem(${id})">−</button>
+        <span class="qty-num">${qty}</span>
+        <button class="qty-btn plus" onclick="addItem(${id})">+</button>
+      </div>`;
+  }
+}
+
+function addItem(id) {
+  cart[id] = (cart[id] || 0) + 1;
+  updateBadge();
+  renderCtrl(id);
+}
+function removeItem(id) {
+  if (!cart[id]) return;
+  cart[id]--;
+  if (cart[id] === 0) delete cart[id];
+  updateBadge();
+  renderCtrl(id);
+  if ($('s-cart').classList.contains('active')) buildCartScreen();
+}
+function updateBadge() {
+  $('cart-count').textContent = Object.values(cart).reduce((a,b) => a+b, 0);
+}
+const cartSubtotal = () => Object.entries(cart).reduce((s,[id,q]) => {
+  const it = findItem(+id); return s + (it ? it.price*q : 0);
+}, 0);
+
+function goCart() {
+  if (!Object.keys(cart).length) { alert('Add at least one item first!'); return; }
+  buildCartScreen();
+  show('cart');
+}
+
+function buildCartScreen() {
+  const list = $('cart-list');
+  list.innerHTML = '';
+  const entries = Object.entries(cart);
+  $('cart-item-count').textContent = entries.reduce((a,[,q]) => a+q, 0) + ' item(s)';
+  entries.forEach(([id, qty]) => {
+    const it = findItem(+id); if (!it) return;
+    list.innerHTML += `
+      <div class="cart-item">
+        <div class="ci-emoji">${it.emoji}</div>
+        <div class="ci-info">
+          <div class="ci-name">${it.name}</div>
+          <div class="ci-price">${fmt(it.price)} × ${qty}</div>
+        </div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" onclick="removeItem(${id})">−</button>
+          <span class="qty-num">${qty}</span>
+          <button class="qty-btn plus" onclick="addItem(${id});buildCartScreen()">+</button>
+        </div>
+        <div class="ci-total">${fmt(it.price*qty)}</div>
+      </div>`;
+  });
+  const sub = cartSubtotal();
+  $('cart-subtotal').textContent = fmt(sub);
+  $('cart-total').textContent = fmt(sub + 5);
+  $('pay-total').textContent = fmt(sub + 5);
+}
+
+// ── PAYMENT ──────────────────────────────────────────────────────────────────
+function selectPay(m) {
+  ['card','eft','snap'].forEach(x => {
+    $('pm-'+x).classList.toggle('selected', x===m);
+    const r = $('r-'+x);
+    r.innerHTML = x===m ? '<div class="radio-dot"></div>' : '';
+  });
+  $('card-fields').style.display = m==='card' ? 'flex' : 'none';
+}
+
+function placeOrder() {
+  orderNum = rnd();
+  $('order-num').textContent = orderNum;
+  $('track-ref').textContent = orderNum;
+  show('confirm');
+}
+
+// ── TRACKING ─────────────────────────────────────────────────────────────────
+function startTracking() {
+  trackStep = 0;
+  stepTimes = {};
+  timerSecs = 22 * 60;
+  renderSteps();
+  startTimer();
+  advanceStep();                          // step 0 immediately
+  setTimeout(() => advanceStep(), 4500);  // step 1
+  setTimeout(() => advanceStep(), 9500);  // step 2
+  setTimeout(() => advanceStep(), 16000); // step 3 — ready
+}
+
+function advanceStep() {
+  if (trackStep >= STEPS.length) return;
+  stepTimes[trackStep] = now();
+  renderSteps();
+  pushNotif(STEPS[trackStep].label);
+  if (trackStep === 1) {
+    $('timer-card').className = 'timer-card cooking';
+    $('timer-sub').textContent = 'Preparing your order…';
+  }
+  if (trackStep === 3) {
+    clearInterval(timerInt);
+    timerSecs = 0;
+    const tc = $('timer-card');
+    tc.className = 'timer-card ready';
+    $('timer-val').textContent = 'Ready!';
+    $('timer-sub').textContent = 'Come to the counter and show your number';
+    const rb = $('rate-btn');
+    rb.disabled = false;
+  }
+  trackStep++;
+}
+
+function renderSteps() {
+  const list = $('steps-list');
+  list.innerHTML = '';
+  STEPS.forEach((st, i) => {
+    const done = i < trackStep - 1;
+    const active = i === trackStep - 1 && trackStep > 0;
+    const pending = !done && !active;
+    const row = document.createElement('div');
+    row.className = `step-row ${done?'done':active?'active':'pending'}`;
+    row.innerHTML = `
+      <div class="step-dot ${done?'done':active?'active':'pending'}">${done ? '✓' : st.icon}</div>
+      <div class="step-info">
+        <div class="step-title ${done?'done':active?'active':'pending'}">${st.label}</div>
+        ${stepTimes[i] ? `<div class="step-time">${stepTimes[i]}</div>` : ''}
+        ${active ? `<div class="step-detail">${st.detail}</div>` : ''}
+      </div>`;
+    list.appendChild(row);
+  });
+}
+
+function startTimer() {
+  if (timerInt) clearInterval(timerInt);
+  timerInt = setInterval(() => {
+    if (trackStep > 1 && timerSecs > 0) timerSecs--;
+    const m = Math.floor(timerSecs / 60), s = timerSecs % 60;
+    $('timer-val').textContent = (m<10?'0':'') + m + ':' + (s<10?'0':'') + s;
+  }, 1000);
+}
+
+function pushNotif(msg) {
+  const stack = $('notif-stack');
+  const div = document.createElement('div');
+  div.className = 'notif';
+  div.innerHTML = `<div class="notif-icon">🔔</div><div class="notif-text">${msg}</div><div class="notif-time">${now()}</div>`;
+  stack.prepend(div);
+  // fade after 8s
+  setTimeout(() => { div.style.transition='opacity 1s'; div.style.opacity='.45'; }, 8000);
+}
+
+// ── RATING ───────────────────────────────────────────────────────────────────
+function buildRating() {
+  // Stars
+  const row = $('stars-row');
+  row.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const s = document.createElement('span');
+    s.className = 'star' + (i <= rating ? ' on' : '');
+    s.textContent = '★';
+    s.setAttribute('role','button');
+    s.setAttribute('aria-label', i + ' stars');
+    s.onclick = () => {
+      rating = i;
+      $('stars-label').textContent = STAR_LABELS[i];
+      $('rate-extra').style.display = 'block';
+      $('submit-btn').disabled = false;
+      buildRating();
+    };
+    row.appendChild(s);
+  }
+  // Tags
+  const tr = $('tags-row');
+  tr.innerHTML = '';
+  TAGS.forEach(label => {
+    const t = document.createElement('span');
+    t.className = 'tag';
+    t.textContent = label;
+    t.onclick = () => t.classList.toggle('on');
+    tr.appendChild(t);
+  });
+  // Tips
+  renderTips();
+}
+
+function renderTips() {
+  const grid = $('tip-grid');
+  grid.innerHTML = '';
+  TIPS.forEach(v => {
+    const b = document.createElement('button');
+    b.className = 'tip-btn' + (selTip===v ? ' on' : '');
+    b.textContent = 'R' + v;
+    b.onclick = () => { selTip = v; $('tip-input').value = ''; renderTips(); };
+    grid.appendChild(b);
+  });
+  const nb = document.createElement('button');
+  nb.className = 'tip-btn' + (selTip===0 ? ' on' : '');
+  nb.textContent = 'No tip';
+  nb.onclick = () => { selTip = 0; $('tip-input').value = ''; renderTips(); };
+  grid.appendChild(nb);
+}
+
+function submitFeedback() { show('done'); }
+
+// ── RESET ────────────────────────────────────────────────────────────────────
+function resetApp() {
+  cart = {}; orderNum = ''; rating = 0; selTip = null;
+  trackStep = 0; timerSecs = 0;
+  if (timerInt) clearInterval(timerInt);
+  $('notif-stack').innerHTML = '';
+  $('rate-extra').style.display = 'none';
+  $('stars-label').textContent = 'Tap a star to rate';
+  $('submit-btn').disabled = true;
+  $('rate-btn').disabled = true;
+  $('comment-box').value = '';
+  $('tip-input').value = '';
+  $('order-note').value = '';
+  updateBadge();
+  buildCats();
+  buildMenu();
+  buildRating();
+  show('menu');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+buildCats();
+buildMenu();
+buildRating();
+</script>
+</body>
+</html>
